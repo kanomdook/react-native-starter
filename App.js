@@ -16,15 +16,19 @@ import {
   Form,
   Item,
   Input,
-  Label
+  Label,
+  Card,
+  CardItem
 } from "native-base";
 
 export default class App extends React.Component {
+  monney = 0;
   constructor(props) {
     super(props);
 
     this.state = {
       loading: true,
+      vat: 0
     };
   }
 
@@ -37,18 +41,73 @@ export default class App extends React.Component {
     this.setState({ loading: false });
   }
 
-  
+  calc = () => {
+    let vat = (this.monney * 7) / 100 + parseInt(this.monney);
+    this.setState({ vat: vat });
+  }
+
+  valChange = (num) => {
+    this.monney = num;
+  }
+
+
   render() {
     if (this.state.loading) {
       return <Expo.AppLoading />;
     }
 
     return (
-      <View></View>
+      <Container>
+        <Header>
+          <Left>
+            <Button transparent>
+              <Icon name='menu' />
+            </Button>
+          </Left>
+          <Body>
+            <Title>VAT Calculator</Title>
+          </Body>
+          <Right />
+        </Header>
+        <Content>
+          <Form>
+            <Item inlineLabel>
+              <Label>จำนวนเงิน</Label>
+              <Input placeholder='เช่น 100' onChangeText={this.valChange} />
+            </Item>
+            <Button full info onPress={this.calc}>
+              <Text>คำนวณ</Text>
+            </Button>
+            <Card transparent>
+              <CardItem>
+                <Body style={styles.center}>
+                  <Text style={styles.textStyle}>
+                    VAT(7%): {this.state.vat ? this.state.vat : 0} บาท
+                </Text>
+                </Body>
+              </CardItem>
+            </Card>
+          </Form>
+        </Content>
+        <Footer>
+          <FooterTab>
+            <Button full>
+            </Button>
+          </FooterTab>
+        </Footer>
+      </Container>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  
+  center: {
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  textStyle: {
+    fontSize: 30.0,
+    fontWeight: 'bold',
+    color: 'red'
+  }
 })
